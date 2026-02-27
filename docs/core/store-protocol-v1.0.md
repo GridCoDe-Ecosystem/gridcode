@@ -2,32 +2,32 @@
 title: GridCoDe Store — Protocol Specification
 version: v1.0
 status: Active Binding
-domain: Store
-layer: Vault-Level Deterministic Commerce FSM
+domain: Core
+layer: Application Protocol
 environment: Gridnet OS
 authoritative: true
 ---
 # GridCoDe Store — Protocol Specification
-## 0. Document Control
-### 0.1 Metadata
+## 1. Document Control
+### 1.1 Metadata
 Document Title: GridCoDe Store — Protocol Specification  
 Version: v1.0  
 Status: Active Binding  
 Supersedes: None  
-### 0.2 Dependencies
+### 1.2 Dependencies
 - GRIDCODE WHITEPAPER v3.0
 - GridCoDe Whitepaper v3.1 Technical Addendum
 - GRIDCODE CONTRACT SPECIFICATION (GCSPEC v1.1)
 - Identity & Reputation Specification (v1.2)
 - Reputation Index Canonical Range Definition
 - GRIDNET OS Documentation (GridScript, CVMContext, DPT Model)
-### 0.3 Change Log
+### 1.3 Change Log
 
 - v1.0 — Initial formalization of StoreVault economic protocol.
 
-## 1. Purpose & Scope
+## 2. Purpose & Scope
 
-### 1.1 Purpose of GridCoDe Store
+### 2.1 Purpose of GridCoDe Store
 This document defines the authoritative economic and execution rules governing Store v1 within the GridCoDe ecosystem.
 
 It formalizes:
@@ -48,7 +48,7 @@ It formalizes:
 
 This specification is normative for Store v1 implementation.
 
-### 1.2 Relationship to GridCoDe Core
+### 2.2 Relationship to GridCoDe Core
 
 Store v1 is an application-level protocol operating within the GridCoDe economic framework.
 
@@ -64,7 +64,7 @@ It does not alter:
 
 Store is a domain-specific economic module.
 
-### 1.3 Position Within Suite of Applications
+### 2.3 Position Within Suite of Applications
 
 Store v1 is:
 
@@ -74,7 +74,7 @@ Store v1 is:
 
 It establishes architectural discipline for all future modules.
 
-### 1.4 Out of Scope
+### 2.4 Out of Scope
 
 This document does not define:
 
@@ -88,7 +88,7 @@ This document does not define:
 
 -   Grid creation policy
 
-### 1.5 Design Principles
+### 2.5 Design Principles
 
 Store v1 adheres to the following principles:
 
@@ -108,13 +108,13 @@ Store v1 adheres to the following principles:
 
 8.  Strict adapter boundary separation
 
-## 2. Architectural Overview
+## 3. Architectural Overview
 
-### 2.1 Layered Architecture Model
+### 3.1 Layered Architecture Model
 
 Store v1 is composed of three layers:
 
-#### 2.1.1 Core Economic Engine
+#### 3.1.1 Core Economic Engine
 
 -   Pure deterministic logic.
 
@@ -124,7 +124,7 @@ Store v1 is composed of three layers:
 
 -   Immutable aggregate updates.
 
-#### 2.1.2 Adapter Layer
+#### 3.1.2 Adapter Layer
 
 -   Generates GridScript.
 
@@ -136,7 +136,7 @@ Store v1 is composed of three layers:
 
 -   Returns structured results to Core.
 
-#### 2.1.3 UI Layer
+#### 3.1.3 UI Layer
 
 -   Extends CWindow.
 
@@ -146,7 +146,7 @@ Store v1 is composed of three layers:
 
 -   Contains no economic mutation logic.
 
-### 2.2 Deterministic Execution Model
+### 3.2 Deterministic Execution Model
 
 For any given:
 
@@ -160,7 +160,7 @@ No implicit time mutation.
 
 Time-based settlement is evaluated externally via injected timestamps.
 
-### 2.3 Immutable Aggregate Design
+### 3.3 Immutable Aggregate Design
 
 Each listing is an independent aggregate root.
 
@@ -168,7 +168,7 @@ All transitions return a new aggregate instance.
 
 In-place mutation is prohibited.
 
-### 2.4 Simulation vs Live Execution Modes
+### 3.4 Simulation vs Live Execution Modes
 
 Store supports:
 
@@ -180,9 +180,9 @@ Core logic remains identical.
 
 Only adapter implementation differs.
 
-## 3. StoreVault State Machine (FSM)
+## 4. StoreVault State Machine (FSM)
 
-### 3.1 Canonical States
+### 4.1 Canonical States
 
 The StoreVault FSM consists of:
 
@@ -196,7 +196,7 @@ The StoreVault FSM consists of:
 
 -   CANCELLED
 
-### 3.2 State Definitions
+### 4.2 State Definitions
 
 LISTED
 
@@ -218,7 +218,7 @@ CANCELLED
 
 Listing withdrawn or resolved in favor of buyer.
 
-### 3.3 Terminal States
+### 4.3 Terminal States
 
 Terminal states are:
 
@@ -228,7 +228,7 @@ Terminal states are:
 
 No transitions are allowed from terminal states.
 
-### 3.4 Transition Matrix
+### 4.4 Transition Matrix
 
 | From | Action | Role | To |
 |------|--------|------|----|
@@ -240,13 +240,13 @@ No transitions are allowed from terminal states.
 | DISPUTED | RESOLVE_BUYER | SYSTEM | CANCELLED ||
 All other transitions are invalid.
 
-### 3.5 Invalid Transition Handling
+### 4.5 Invalid Transition Handling
 
 Invalid transitions must return structured failure.
 
 No exception throwing is permitted in core logic.
 
-### 3.6 Role Constraints
+### 4.6 Role Constraints
 
 Actions are role-restricted:
 
@@ -262,7 +262,7 @@ Actions are role-restricted:
 
 Role validation must occur prior to transition evaluation.
 
-### 3.7 Grid Inactive Constraints
+### 4.7 Grid Inactive Constraints
 
 If GridStatus = INACTIVE:
 
@@ -270,7 +270,7 @@ If GridStatus = INACTIVE:
 
 -   Existing PURCHASED or DISPUTED states must remain valid.
 
-### 3.8 Escrow Confirmation Requirement
+### 4.8 Escrow Confirmation Requirement
 
 Transition LISTED → PURCHASED requires escrowConfirmed = true.
 
@@ -278,9 +278,9 @@ Core must reject purchase attempts without escrow confirmation.
 
 Continuing strictly according to the approved Table of Contents.
 
-## 4. Listing Aggregate Model
+## 5. Listing Aggregate Model
 
-### 4.1 ListingAggregate Structure
+### 5.1 ListingAggregate Structure
 
 Each listing SHALL be modeled as an independent aggregate root.
 
@@ -304,7 +304,7 @@ The aggregate SHALL be fully serializable and environment-independent.
 
 No OS-specific data (wallet handles, sockets, session keys, or VM references) SHALL exist within the aggregate.
 
-### 4.2 Receipt Association Model
+### 5.2 Receipt Association Model
 
 Every valid state transition MUST generate exactly one receipt.
 
@@ -334,7 +334,7 @@ Each receipt MUST record:
 
 No state transition SHALL occur without a corresponding receipt.
 
-### 4.3 Dispute Association Model
+### 5.3 Dispute Association Model
 
 A listing MAY contain at most one active dispute record.
 
@@ -358,7 +358,7 @@ A dispute record SHALL include:
 
 Multiple simultaneous disputes are prohibited.
 
-### 4.4 Immutability Rules
+### 5.4 Immutability Rules
 
 ListingAggregate instances SHALL be treated as immutable.
 
@@ -380,7 +380,7 @@ This ensures:
 
 -   Predictable simulation behavior
 
-### 4.5 Single Active Purchase Invariant
+### 5.5 Single Active Purchase Invariant
 
 At any given time:
 
@@ -394,9 +394,9 @@ Then PURCHASE action MUST be rejected.
 
 This invariant prevents double-sell conditions and replay exploitation.
 
-## 5. Receipt Lifecycle & Settlement
+## 6. Receipt Lifecycle & Settlement
 
-### 5.1 Receipt States
+### 6.1 Receipt States
 
 ReceiptState SHALL consist of:
 
@@ -410,7 +410,7 @@ ReceiptState SHALL consist of:
 
 -   DISPUTED_FLAGGED
 
-### 5.2 Receipt Generation Rules
+### 6.2 Receipt Generation Rules
 
 Upon valid state transition:
 
@@ -422,7 +422,7 @@ Upon valid state transition:
 
 Receipt creation is mandatory for all transitions.
 
-### 5.3 Settlement Window Definition
+### 6.3 Settlement Window Definition
 
 A time-based settlement window SHALL apply after transition to FULFILLED.
 
@@ -434,7 +434,7 @@ Upon entering FULFILLED:
 
 -   settlementFinalized = false
 
-### 5.4 Settlement Finalization Criteria
+### 6.4 Settlement Finalization Criteria
 
 Settlement SHALL be finalized when:
 
@@ -450,7 +450,7 @@ Upon finalization:
 
 -   Reputation update MAY be triggered
 
-### 5.5 Reputation Update Trigger Rules
+### 6.5 Reputation Update Trigger Rules
 
 Reputation mutation SHALL NOT occur until:
 
@@ -462,7 +462,7 @@ If dispute exists:
 
 -   Resolution MUST occur before settlement finalization
 
-### 5.6 Settlement Independence from Epoch Boundaries
+### 6.6 Settlement Independence from Epoch Boundaries
 
 Epoch rollover SHALL NOT:
 
@@ -478,9 +478,9 @@ Settlement logic is transaction-scoped and epoch-independent.
 
 Continuing strictly according to the approved Table of Contents.
 
-## 6. Dispute & Arbitration Policy
+## 7. Dispute & Arbitration Policy
 
-### 6.1 Dispute Eligibility Rules
+### 7.1 Dispute Eligibility Rules
 
 A dispute MAY be raised only when:
 
@@ -500,7 +500,7 @@ A dispute SHALL NOT be raised:
 
 Only the BUYER role MAY raise a dispute.
 
-### 6.2 Evidence Submission Requirements
+### 7.2 Evidence Submission Requirements
 
 Upon dispute initiation:
 
@@ -522,7 +522,7 @@ Core SHALL NOT perform external verification.
 
 Core SHALL only evaluate evidence presence and validation outcome returned by adapter or validation layer.
 
-### 6.3 Evidence Validation Model
+### 7.3 Evidence Validation Model
 
 Evidence validation SHALL follow deterministic rules:
 
@@ -538,7 +538,7 @@ Validation logic MUST be deterministic and reproducible.
 
 No subjective arbitration is permitted in v1.
 
-### 6.4 Resolution Deadline
+### 7.4 Resolution Deadline
 
 Each dispute SHALL define:
 
@@ -548,9 +548,9 @@ If resolutionDeadline expires:
 
 -   Deterministic fallback rules SHALL apply.
 
-### 6.5 Deterministic Resolution Outcomes
+### 7.5 Deterministic Resolution Outcomes
 
-#### 6.5.1 Resolve in Favor of Seller
+#### 7.5.1 Resolve in Favor of Seller
 
 If seller evidence is valid:
 
@@ -560,7 +560,7 @@ If seller evidence is valid:
 
 -   settlementDeadline MAY reset or remain based on policy (see Section 10)
 
-#### 6.5.2 Resolve in Favor of Buyer
+#### 7.5.2 Resolve in Favor of Buyer
 
 If seller evidence is invalid or absent:
 
@@ -570,7 +570,7 @@ If seller evidence is invalid or absent:
 
 -   Escrow release SHALL follow adapter logic
 
-### 6.6 Settlement Freeze During Dispute
+### 7.6 Settlement Freeze During Dispute
 
 While receiptState = DISPUTED_FLAGGED:
 
@@ -580,9 +580,9 @@ While receiptState = DISPUTED_FLAGGED:
 
 -   Reputation mutation MUST be blocked
 
-### 6.7 Override Mechanism
+### 7.7 Override Mechanism
 
-#### 6.7.1 Override Conditions
+#### 7.7.1 Override Conditions
 
 Override MAY be invoked only in cases of:
 
@@ -596,7 +596,7 @@ Override MAY be invoked only in cases of:
 
 Override SHALL NOT be used for ordinary dispute disagreement.
 
-#### 6.7.2 Override Authority
+#### 7.7.2 Override Authority
 
 Override authority SHALL be system-level only.
 
@@ -606,7 +606,7 @@ Buyer-initiated override is prohibited.
 
 Seller-initiated override is prohibited.
 
-#### 6.7.3 Override Logging Requirements
+#### 7.7.3 Override Logging Requirements
 
 If override is applied:
 
@@ -618,7 +618,7 @@ If override is applied:
 
 Override usage MUST be auditable.
 
-#### 6.7.4 Transparency Requirements
+#### 7.7.4 Transparency Requirements
 
 Override application SHALL be:
 
@@ -632,9 +632,9 @@ Silent mutation is prohibited.
 
 Continuing strictly according to the approved Table of Contents.
 
-## 7. Escrow & Adapter Boundary
+## 8. Escrow & Adapter Boundary
 
-### 7.1 Escrow Responsibility Model
+### 8.1 Escrow Responsibility Model
 
 Escrow execution SHALL be performed exclusively by the Adapter Layer through GRIDNET OS.
 
@@ -658,7 +658,7 @@ The Core Economic Engine SHALL NOT:
 
 Core SHALL only require escrow confirmation before state mutation.
 
-### 7.2 Core vs Adapter Responsibilities
+### 8.2 Core vs Adapter Responsibilities
 
 #### Core Responsibilities
 
@@ -694,7 +694,7 @@ Core SHALL only require escrow confirmation before state mutation.
 
 No economic decision logic SHALL exist in the Adapter.
 
-### 7.3 Escrow Confirmation Requirement
+### 8.3 Escrow Confirmation Requirement
 
 Transition LISTED → PURCHASED SHALL require:
 
@@ -712,7 +712,7 @@ Core SHALL NOT assume escrow success.
 
 Escrow confirmation MUST be explicitly injected.
 
-### 7.4 Commit Confirmation Handling
+### 8.4 Commit Confirmation Handling
 
 Adapter SHALL:
 
@@ -728,7 +728,7 @@ Core SHALL operate only on structured confirmation returned by Adapter.
 
 Core SHALL NOT interpret low-level OS responses.
 
-### 7.5 Failure Handling Rules
+### 8.5 Failure Handling Rules
 
 If Adapter reports failure:
 
@@ -744,9 +744,9 @@ Escrow failure MUST NOT produce inconsistent listing state.
 
 Continuing strictly according to the approved Table of Contents.
 
-## 8. Grid Expiry & Continuity Policy
+## 9. Grid Expiry & Continuity Policy
 
-### 8.1 Grid ACTIVE vs INACTIVE States
+### 9.1 Grid ACTIVE vs INACTIVE States
 
 GridStatus SHALL be defined externally to the ListingAggregate.
 
@@ -760,7 +760,7 @@ GridStatus SHALL represent the activation state of the Private Marketplace grid.
 
 GridStatus SHALL NOT be stored inside the ListingAggregate.
 
-### 8.2 Behavior When Grid Becomes INACTIVE
+### 9.2 Behavior When Grid Becomes INACTIVE
 
 If GridStatus transitions from ACTIVE → INACTIVE:
 
@@ -778,7 +778,7 @@ The following rules SHALL apply:
 
 Grid inactivity SHALL NOT retroactively invalidate active transactions.
 
-### 8.3 Ongoing Transaction Protection
+### 9.3 Ongoing Transaction Protection
 
 For listings in state:
 
@@ -808,7 +808,7 @@ Grid expiry SHALL NOT interrupt:
 
 -   Reputation staging
 
-### 8.4 Dispute Continuity Across Expiry
+### 9.4 Dispute Continuity Across Expiry
 
 If GridStatus becomes INACTIVE during an active dispute:
 
@@ -820,7 +820,7 @@ If GridStatus becomes INACTIVE during an active dispute:
 
 Sponsor presence SHALL NOT be required for dispute resolution.
 
-### 8.5 Settlement Finality Protection
+### 9.5 Settlement Finality Protection
 
 SettlementFinalized logic SHALL operate independently of GridStatus.
 
@@ -838,9 +838,9 @@ Settlement is transaction-scoped and SHALL complete regardless of grid activatio
 
 Continuing strictly according to the approved Table of Contents.
 
-## 9. Epoch Boundary Independence
+## 10. Epoch Boundary Independence
 
-### 9.1 Definition of Epoch
+### 10.1 Definition of Epoch
 
 For the purposes of this specification:
 
@@ -858,7 +858,7 @@ Epoch boundaries MAY affect:
 
 Epoch boundaries SHALL NOT directly alter transaction state.
 
-### 9.2 Separation of Epoch Accounting and Transaction Settlement
+### 10.2 Separation of Epoch Accounting and Transaction Settlement
 
 StoreVault transaction settlement SHALL be logically independent from epoch accounting cycles.
 
@@ -874,7 +874,7 @@ Settlement windows SHALL be evaluated strictly by:
 
 Epoch changes SHALL NOT influence settlement evaluation.
 
-### 9.3 Prohibited Epoch Effects
+### 10.3 Prohibited Epoch Effects
 
 Epoch rollover MUST NOT:
 
@@ -892,7 +892,7 @@ Epoch rollover MUST NOT:
 
 Any system behavior that mutates StoreVault state based solely on epoch change SHALL be considered a protocol violation.
 
-### 9.4 Yield Neutrality Rule
+### 10.4 Yield Neutrality Rule
 
 If StoreVault participation is connected to yield or staking mechanics:
 
@@ -906,7 +906,7 @@ StoreVault SHALL not retroactively modify epoch-level economic records.
 
 Continuing strictly according to the approved Table of Contents.
 
-## 10. Economic Parameter Registry
+## 11. Economic Parameter Registry
 
 This section defines the configurable economic constants governing Store v1.
 
@@ -914,7 +914,7 @@ All parameters defined herein SHALL be treated as authoritative defaults for Sto
 
 Parameter changes SHALL require version update of this specification.
 
-### 10.1 disputeWindowMs
+### 11.1 disputeWindowMs
 
 Definition:
 
@@ -932,7 +932,7 @@ Rules:
 
 -   After settlementDeadline passes, disputes SHALL NOT be accepted.
 
-### 10.2 evidenceSubmissionWindowMs
+### 11.2 evidenceSubmissionWindowMs
 
 Definition:
 
@@ -950,7 +950,7 @@ Rules:
 
 -   evidenceSubmissionWindowMs MUST NOT exceed disputeWindowMs unless explicitly revised in future version.
 
-### 10.3 Default Resolution Bias
+### 11.3 Default Resolution Bias
 
 In absence of valid seller evidence:
 
@@ -966,7 +966,7 @@ Rationale:
 
 This bias MAY be revised in future protocol versions but SHALL remain fixed for v1.
 
-### 10.4 overrideAuthority
+### 11.4 overrideAuthority
 
 Definition:
 
@@ -986,7 +986,7 @@ Rules:
 
 -   Override usage MUST be logged per Section 6.7.
 
-### 10.5 Maximum Active Purchase Rule
+### 11.5 Maximum Active Purchase Rule
 
 Each listing SHALL permit at most one active purchase lifecycle at a time.
 
@@ -998,7 +998,7 @@ Then PURCHASE action MUST be rejected.
 
 This parameter is non-configurable in v1.
 
-### 10.6 Settlement Reset Behavior After Dispute Resolution
+### 11.6 Settlement Reset Behavior After Dispute Resolution
 
 Upon dispute resolution:
 
@@ -1016,7 +1016,7 @@ SettlementFinalized SHALL be set immediately true upon dispute resolution.
 
 No additional dispute window SHALL open after resolution.
 
-### 10.7 Parameter Governance Rule
+### 11.7 Parameter Governance Rule
 
 All parameters defined in this registry SHALL:
 
@@ -1030,13 +1030,13 @@ Runtime mutation of economic parameters is prohibited in v1.
 
 Continuing strictly according to the approved Table of Contents.
 
-## 11. Invariants
+## 12. Invariants
 
 This section defines the non-negotiable conditions that MUST always hold true within Store v1.
 
 Violation of any invariant constitutes a protocol-level defect.
 
-### 11.1 Single Active Purchase
+### 12.1 Single Active Purchase
 
 A listing SHALL have at most one active purchase lifecycle.
 
@@ -1054,7 +1054,7 @@ This invariant prevents:
 
 -   Replay attacks
 
-### 11.2 Terminal State Finality
+### 12.2 Terminal State Finality
 
 Terminal states are defined as:
 
@@ -1070,7 +1070,7 @@ Until settlementFinalized is true, FULFILLED remains eligible for:
 
 Reactivation or resurrection of terminal states is prohibited.
 
-### 11.3 Settlement Precedes Reputation
+### 12.3 Settlement Precedes Reputation
 
 Reputation mutation SHALL NOT occur before settlementFinalized = true.
 
@@ -1082,7 +1082,7 @@ Then Reputation update MUST NOT execute.
 
 This prevents premature reputation inflation.
 
-### 11.4 Dispute Freezes Settlement
+### 12.4 Dispute Freezes Settlement
 
 While receiptState = DISPUTED_FLAGGED:
 
@@ -1092,7 +1092,7 @@ While receiptState = DISPUTED_FLAGGED:
 
 -   Reputation mutation MUST be blocked.
 
-### 11.5 Grid Expiry Isolation
+### 12.5 Grid Expiry Isolation
 
 GridStatus SHALL NOT alter:
 
@@ -1106,7 +1106,7 @@ GridStatus SHALL NOT alter:
 
 GridStatus MAY only block new PURCHASE or new LISTING actions.
 
-### 11.6 Epoch Isolation
+### 12.6 Epoch Isolation
 
 Epoch rollover SHALL NOT:
 
@@ -1122,7 +1122,7 @@ Epoch rollover SHALL NOT:
 
 Epoch and transaction lifecycle are orthogonal systems.
 
-### 11.7 Override Transparency
+### 12.7 Override Transparency
 
 If overrideApplied = true:
 
@@ -1134,7 +1134,7 @@ If overrideApplied = true:
 
 Silent override mutation is prohibited.
 
-### 11.8 Deterministic Transition Integrity
+### 12.8 Deterministic Transition Integrity
 
 For any identical input tuple:
 
@@ -1144,7 +1144,7 @@ The resulting output MUST be identical.
 
 Core logic MUST contain no randomness or hidden state.
 
-### 11.9 Escrow Confirmation Integrity
+### 12.9 Escrow Confirmation Integrity
 
 Transition LISTED → PURCHASED SHALL require escrowConfirmed = true.
 
@@ -1156,7 +1156,7 @@ If escrowConfirmed = false:
 
 Core SHALL NOT infer escrow success.
 
-### 11.10 Receipt–State Mirror Rule
+### 12.10 Receipt–State Mirror Rule
 
 Every valid state transition MUST produce exactly one receipt reflecting:
 
@@ -1172,13 +1172,13 @@ No state mutation SHALL occur without corresponding receipt.
 
 Continuing strictly according to the approved Table of Contents.
 
-## 12. Security Considerations
+## 13. Security Considerations
 
 This section defines protocol-level security constraints applicable to Store v1 implementation.
 
 Security rules defined herein are normative.
 
-### 12.1 Role Enforcement Requirements
+### 13.1 Role Enforcement Requirements
 
 All actions SHALL be role-validated prior to state transition.
 
@@ -1198,7 +1198,7 @@ Unauthorized role attempts MUST result in deterministic rejection.
 
 Role validation MUST occur before FSM evaluation.
 
-### 12.2 Prevention of Double Execution
+### 13.2 Prevention of Double Execution
 
 Core MUST prevent:
 
@@ -1212,7 +1212,7 @@ Core MUST prevent:
 
 ListingAggregate immutability combined with transition guards SHALL prevent duplicate execution.
 
-### 12.3 Replay Protection Expectations
+### 13.3 Replay Protection Expectations
 
 Core SHALL assume that Adapter and GRIDNET OS provide network-level replay protection.
 
@@ -1226,7 +1226,7 @@ However, Core MUST still enforce:
 
 Replay attempts at application layer MUST fail deterministically.
 
-### 12.4 Adapter Failure Handling
+### 13.4 Adapter Failure Handling
 
 Adapter failures SHALL NOT corrupt economic state.
 
@@ -1250,7 +1250,7 @@ Core MUST:
 
 Partial mutation is prohibited.
 
-### 12.5 Dispute Abuse Mitigation
+### 13.5 Dispute Abuse Mitigation
 
 To mitigate dispute abuse:
 
@@ -1264,7 +1264,7 @@ To mitigate dispute abuse:
 
 Abuse detection beyond deterministic rules MAY be introduced in future versions but is out of scope for v1.
 
-### 12.6 Override Abuse Mitigation
+### 13.6 Override Abuse Mitigation
 
 Override usage SHALL:
 
@@ -1278,7 +1278,7 @@ Frequent override invocation SHALL indicate architectural defect and require pro
 
 Override SHALL NOT be used for discretionary arbitration.
 
-### 12.7 Time Manipulation Safeguards
+### 13.7 Time Manipulation Safeguards
 
 Core SHALL not call system time directly.
 
@@ -1292,7 +1292,7 @@ This ensures:
 
 -   Reduced manipulation surface
 
-### 12.8 Separation of Concerns Security Rule
+### 13.8 Separation of Concerns Security Rule
 
 Core SHALL NOT:
 
@@ -1310,13 +1310,13 @@ This reduces attack surface and preserves economic determinism.
 
 Continuing strictly according to the approved Table of Contents.
 
-## 13. Compliance With GRIDNET OS Documentation
+## 14. Compliance With GRIDNET OS Documentation
 
 This section defines how Store v1 aligns with the published GRIDNET OS architecture and developer documentation.
 
 Store v1 SHALL operate strictly within the documented execution model of GRIDNET OS.
 
-### 13.1 GridScript Execution Model Alignment
+### 14.1 GridScript Execution Model Alignment
 
 All state-modifying economic actions in Store v1 SHALL be executed using GridScript.
 
@@ -1336,7 +1336,7 @@ Store v1 SHALL NOT:
 
 GridScript SHALL remain the canonical execution substrate.
 
-### 13.2 CVMContext Integration Model
+### 14.2 CVMContext Integration Model
 
 All communication between UI and GRIDNET OS SHALL be performed through CVMContext.
 
@@ -1350,7 +1350,7 @@ UI SHALL:
 
 No direct REST API calls SHALL be used for economic mutation.
 
-### 13.3 Decentralized Processing Thread (DPT) Usage Assumptions
+### 14.3 Decentralized Processing Thread (DPT) Usage Assumptions
 
 Adapter SHALL:
 
@@ -1362,7 +1362,7 @@ Adapter SHALL:
 
 Store economic transitions SHALL map to one atomic DPT per action.
 
-### 13.4 Asynchronous Commit Handling
+### 14.4 Asynchronous Commit Handling
 
 Adapter SHALL:
 
@@ -1378,8 +1378,7 @@ Core SHALL remain synchronous and deterministic.
 
 Adapter SHALL translate asynchronous execution into structured Result objects.
 
-### 13.5 No Direct REST Interaction
-
+### 14.5 No Direct REST Interactions
 Store v1 SHALL NOT:
 
 -   Use centralized APIs for transaction execution
@@ -1390,7 +1389,7 @@ Store v1 SHALL NOT:
 
 All state mutation SHALL originate from deterministic on-chain or OS-validated execution.
 
-### 13.6 Shadow DOM & UI Process Alignment
+### 14.6 Shadow DOM & UI Process Alignment
 
 Store UI SHALL:
 
@@ -1404,7 +1403,7 @@ UI SHALL not contain economic mutation logic.
 
 All economic logic SHALL reside in Core.
 
-### 13.7 Deterministic Replicability
+### 14.7 Deterministic Replicability
 
 All economic transitions SHALL be:
 
@@ -1418,13 +1417,13 @@ This aligns with GRIDNET OS decentralized state machine design.
 
 Continuing strictly according to the approved Table of Contents.
 
-## 14. Implementation Notes (Non-Normative)
+## 15. Implementation Notes (Non-Normative)
 
 This section provides recommended implementation guidance.
 
 It is informative and does not override normative protocol rules.
 
-### 14.1 Recommended TypeScript Patterns
+### 15.1 Recommended TypeScript Patterns
 
 It is recommended that Store v1 Core be implemented using:
 
@@ -1442,7 +1441,7 @@ Exceptions SHOULD NOT be used for control flow in Core logic.
 
 Result-based failure handling is recommended for clarity and adapter interoperability.
 
-### 14.2 Suggested Aggregate Structure
+### 15.2 Suggested Aggregate Structure
 
 Recommended ListingAggregate shape:
 
@@ -1458,7 +1457,7 @@ settlementFinalized: boolean
 
 Aggregate SHALL remain environment-independent.
 
-### 14.3 Suggested Adapter Interface
+### 15.3 Suggested Adapter Interface
 
 Recommended adapter interface shape:
 
@@ -1478,7 +1477,7 @@ Adapter SHALL translate Core actions into:
 
 -   Structured confirmation objects
 
-### 14.4 Simulation Mode Guidance
+### 15.4 Simulation Mode Guidance
 
 Simulation Mode SHOULD:
 
@@ -1494,7 +1493,7 @@ Simulation Mode SHALL NOT modify Core logic.
 
 Only adapter implementation SHALL differ.
 
-### 14.5 Logging Recommendations
+### 15.5 Logging Recommendations
 
 It is recommended that:
 
@@ -1520,7 +1519,7 @@ Logs SHOULD include:
 
 Logging SHALL remain outside Core.
 
-### 14.6 Testing Recommendations
+### 15.6 Testing Recommendations
 
 Recommended test coverage:
 
@@ -1542,7 +1541,7 @@ Recommended test coverage:
 
 Unit tests SHOULD validate invariants directly.
 
-### 14.7 Versioning Strategy
+### 15.7 Versioning Strategy
 
 Future revisions of Store protocol SHOULD:
 
@@ -1556,13 +1555,13 @@ Future revisions of Store protocol SHOULD:
 
 Continuing strictly according to the approved Table of Contents.
 
-## 15. Future Extensions (Informative)
+## 16. Future Extensions (Informative)
 
 This section outlines potential future enhancements to Store protocol.
 
 These extensions are not part of Store v1 normative requirements.
 
-### 15.1 DAO-Based Arbitration Upgrade Path
+### 16.1 DAO-Based Arbitration Upgrade Path
 
 In future versions, dispute resolution MAY evolve to include:
 
@@ -1582,7 +1581,7 @@ If implemented:
 
 -   Governance integration MUST not compromise transaction finality guarantees.
 
-### 15.2 Multi-Asset Escrow Support
+### 16.2 Multi-Asset Escrow Support
 
 Store v1 assumes escrow confirmation from a single asset class.
 
@@ -1604,7 +1603,7 @@ Such extensions SHALL preserve:
 
 -   Single active purchase rule
 
-### 15.3 Cross-Vault Settlement Integration
+### 16.3 Cross-Vault Settlement Integration
 
 Future versions MAY integrate StoreVault with:
 
@@ -1624,7 +1623,7 @@ Integration SHALL preserve:
 
 -   Immutable aggregate discipline
 
-### 15.4 Multi-Dispute Review Layers
+### 16.4 Multi-Dispute Review Layers
 
 Store v1 permits only one dispute per lifecycle.
 
@@ -1644,7 +1643,7 @@ Such enhancements SHALL define:
 
 -   Updated invariants
 
-### 15.5 Configurable Economic Parameters
+### 16.5 Configurable Economic Parameters
 
 Future versions MAY allow:
 
@@ -1662,7 +1661,7 @@ Such changes SHALL:
 
 -   Preserve settlement–reputation sequencing
 
-### 15.6 Formal On-Chain Parameter Governance
+### 16.6 Formal On-Chain Parameter Governance
 
 Future upgrades MAY formalize:
 
