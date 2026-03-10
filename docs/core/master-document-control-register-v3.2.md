@@ -171,6 +171,7 @@ docs/archive/
     subid-role-spec-v1.2.md
   runtime-legacy/
     master-document-control-register-v3.0.md
+    master-document-control-register-v3.1.md
     gcspec-v1.1.md
     state-domain-storage-v1.2.md
 ```
