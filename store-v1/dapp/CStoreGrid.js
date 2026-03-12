@@ -551,19 +551,28 @@ class CStoreGrid extends CWindow {
     this.getControl("receipt-section").style.display = "block"
   }
 
-  // ── Action handler — phantom mode first ───────────────────────────────────
-
+// ── Action handler — phantom mode first ───────────────────────────────────
   onAction (action) {
     if (!this.mListing) return
+    if (action === StoreAction.FULFILL) {
+      this.askString(
+        "Delivery Proof",
+        "Enter delivery proof hash (IPFS CID or signed receipt hash):",
+        value => this._executeAction(action, value || ""),
+        true
+      )
+      return
+    }
+    this._executeAction(action, undefined)
+  }
 
+  // ── Continuation — builds context, runs phantom, stores pending state ─────
+  _executeAction (action, deliveryProofHash) {
     const myId   = CVMContext.getInstance().getUserFullID()
     const now    = Date.now()
-
-    // Build ActionContext for phantom run
     const previousHash = this.mListing.receipts.length === 0
       ? "genesis"
       : this.mListing.receipts[this.mListing.receipts.length - 1].receiptHash
-
     const context = {
       actorId:         myId,
       timestamp:       now,
@@ -572,18 +581,12 @@ class CStoreGrid extends CWindow {
                        action === StoreAction.RESOLVE_SELLER      ||
                        action === StoreAction.RESOLVE_BUYER,
       escrowTxId:        action === StoreAction.PURCHASE ? `escrow-pending-${now}` : undefined,
-      deliveryProofHash: action === StoreAction.FULFILL  ? this.promptDeliveryProof() : undefined,
+      deliveryProofHash,
       previousHash
     }
-
-    // Run engine as phantom — pure function, no side effects
     const phantom = executeAction(this.mListing, action, context, ECON_PARAMS)
-
-    // Store pending state
     _private.get(this).pendingAction  = action
     _private.get(this).pendingContext = context
-
-    // Show phantom preview panel
     this.showPhantomPreview(action, phantom)
   }
 
@@ -683,19 +686,6 @@ class CStoreGrid extends CWindow {
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────
-
-  promptDeliveryProof () {
-    // In production: open a file picker or IPFS hash input dialog
-    // For v1: use askString
-    let proof = null
-    this.askString(
-      "Delivery Proof",
-      "Enter delivery proof hash (IPFS CID or signed receipt hash):",
-      value => { proof = value },
-      true
-    )
-    return proof ?? ""
-  }
 
   setStatus (msg, type = "") {
     const bar = this.getControl("status-bar")
