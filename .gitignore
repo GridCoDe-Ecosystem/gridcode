@@ -140,3 +140,9 @@ vite.config.ts.timestamp-*
 dist/
 mdcr_registry.txt
 repo_files.txt
+store-v1/**/*.js
+store-v1/**/*.js.map
+store-v1/**/*.d.ts
+store-v1/**/*.d.ts.map
+store-v1/compiled/
+store-v1/dapp/*.save

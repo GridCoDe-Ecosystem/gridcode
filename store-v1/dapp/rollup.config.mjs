@@ -35,7 +35,15 @@ export default {
     banner:  '"use strict"',         // Ensure it leads the output file
   },
 
-  external: SYSTEM_LIBS,
+external: [
+  ...SYSTEM_LIBS,
+  "crypto",
+  "../engine/StoreVault.js",
+  "../engine/guards.js",
+  "../engine/transitions.js",
+  "../engine/receipts.js",
+  "../adapter/SimAdapter.js"
+],
 
 plugins: [
   // Resolve relative imports (../engine/*.ts etc.)

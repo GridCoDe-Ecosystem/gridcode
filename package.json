@@ -1,11 +1,14 @@
 {
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/node": "^20.19.37",
     "rollup": "^4.59.0",
+    "terser": "^5.46.0",
     "tslib": "^2.8.1",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.18"
   },
   "name": "gridcode",
   "description": "Deterministic Vault-Based Coordination Framework   Built on Gridnet OS",
@@ -52,7 +55,7 @@
   },
   "scripts": {
     "test": "vitest run",
-    "build:app": "rollup -c store-v1/dapp/rollup.config.mjs",
+    "build:app": "rollup -c store-v1/dapp/rollup.config.mjs && npx terser dist/CStoreGrid.js -o dist/CStoreGrid.js --compress --mangle",
     "build:watch": "rollup -c store-v1/dapp/rollup.config.mjs --watch",
     "package:app": "npm run build:app && cp dist/CStoreGrid.js dist/CStoreGrid.app"
   },
