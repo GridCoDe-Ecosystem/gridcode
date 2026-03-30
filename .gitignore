@@ -146,3 +146,4 @@ store-v1/**/*.d.ts
 store-v1/**/*.d.ts.map
 store-v1/compiled/
 store-v1/dapp/*.save
+dist/
