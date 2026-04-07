@@ -38,6 +38,19 @@ Each folder corresponds to a protocol layer of the GridCoDe ecosystem.
 
 ---
 
+## Whitepaper
+
+The full system-level design of GridCoDe is described in the v4.0 Coordination Model:
+
+- docs/whitepaper/gridcode-coordination-model-v4.0.md
+
+This document serves as the public architectural definition of GridCoDe.
+
+> Note: The whitepaper is not part of the MDCR-controlled specification set.  
+> Implementation must follow the documents in `/docs`.
+
+---
+
 ## Store v1 — Gridnet Integration Entry
 
 The Store v1 implementation is the first executable GridCoDe module adapted for Gridnet OS.
